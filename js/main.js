@@ -141,12 +141,13 @@ console.log("MAIN JS LOADED");
     const progressLabel = document.querySelector(".progress-label");
     if (!sections.length || !links.length || !progressFill) return;
 
-    let activeSectionId = sections[0].id;
+    let activeSectionId = null;
     let ticking = false;
+    let isScrollingClick = false;
+    let scrollTimeout = null;
 
     function setActiveSidebarLink(id) {
       const targetId = id === "topic-6" ? "topic-5" : id;
-      if (activeSectionId === targetId) return;
       activeSectionId = targetId;
       links.forEach((link) => {
         link.classList.toggle("active", link.dataset.target === targetId);
@@ -154,6 +155,11 @@ console.log("MAIN JS LOADED");
     }
 
     function getActiveSection() {
+      // Check if user is scrolled to the absolute bottom of the page
+      if ((window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 60)) {
+        return sections[sections.length - 1];
+      }
+
       const boundary = Math.min(window.innerHeight * 0.15, 96);
       let bestSection = sections[0];
       let bestScore = Infinity;
@@ -201,6 +207,7 @@ console.log("MAIN JS LOADED");
     }
 
     function handleScroll() {
+      if (isScrollingClick) return; // skip updating scroll spy during click scrolling
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
@@ -215,8 +222,30 @@ console.log("MAIN JS LOADED");
         event.preventDefault();
         const targetSection = document.getElementById(targetId);
         if (!targetSection) return;
+
+        isScrollingClick = true;
         targetSection.scrollIntoView({ behavior: "smooth", block: "start" });
         setActiveSidebarLink(targetId);
+
+        // Update progress instantly for click target to ensure active states align
+        const sectionIndex = sections.findIndex(s => s.id === targetId) + 1;
+        if (sectionIndex > 0) {
+          const activeModuleIndex = Math.min(sectionIndex, 5);
+          const percentage = activeModuleIndex * 20;
+          progressFill.style.width = `${percentage}%`;
+          if (progressLabel) {
+            progressLabel.textContent = `${percentage}% Complete`;
+          }
+          const progressStats = document.querySelector(".progress-stats");
+          if (progressStats) {
+            progressStats.textContent = `Module ${activeModuleIndex} of 5`;
+          }
+        }
+
+        if (scrollTimeout) clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          isScrollingClick = false;
+        }, 850); // duration of smooth scroll plus breathing room
       });
     });
 

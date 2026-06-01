@@ -925,7 +925,9 @@ p { color: var(--text-secondary); font-size: 1.05rem; }
     gap: 12px;
     text-align: center;
   }
+}
 
+@media (max-width: 1023px) and (orientation: portrait), (max-width: 699px) {
   .learning-layout {
     grid-template-columns: 1fr;
   }
@@ -2154,70 +2156,78 @@ a:focus-visible{
     padding: 0 16px !important;
   }
 
-  .learning-sidebar {
-    position: relative !important;
-    top: auto !important;
-    overflow: visible !important;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-  }
+  @media (orientation: portrait), (max-width: 699px) {
+    .learning-sidebar {
+      position: relative !important;
+      top: auto !important;
+      overflow: visible !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+    }
 
-  .sidebar-card {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-  }
+    .sidebar-card {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+    }
 
-  .learning-layout {
-    grid-template-columns: 1fr !important;
-    gap: 24px !important;
+    .learning-layout {
+      grid-template-columns: 1fr !important;
+      gap: 24px !important;
+    }
   }
 
   /* Compact Navbar for Mobile */
   .nav-inner {
-    height: 54px !important;
+    height: 48px !important;
     padding: 0 10px !important;
   }
 
   .logo-icon {
-    width: 28px !important;
-    height: 28px !important;
+    width: 26px !important;
+    height: 26px !important;
     border-radius: 6px !important;
   }
 
   .logo-icon svg {
-    width: 15px !important;
-    height: 15px !important;
+    width: 14px !important;
+    height: 14px !important;
   }
 
   .logo-title {
-    font-size: 0.8rem !important;
+    font-size: 0.76rem !important;
   }
 
   .dark-toggle,
   .mobile-menu-btn {
-    width: 34px !important;
-    height: 34px !important;
-    border-radius: 6px !important;
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 5px !important;
+    gap: 4px !important;
   }
 
   .dark-toggle svg,
   .mobile-menu-btn svg {
-    width: 15px !important;
-    height: 15px !important;
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .mobile-menu-btn span {
+    width: 14px !important;
+    height: 1.5px !important;
   }
 
   .mobile-nav {
-    top: 54px !important;
-    max-height: calc(100vh - 54px) !important;
+    top: 48px !important;
+    max-height: calc(100vh - 48px) !important;
   }
 
-  /* Responsive inner page hero adjustments */
+  /* Responsive inner page hero adjustments (Eliminating unnecessary top spacing) */
   .page-hero {
     display: block !important;
     visibility: visible !important;
-    padding: 110px 0 48px !important;
+    padding: 80px 0 32px !important;
     text-align: center;
   }
   
@@ -2231,17 +2241,17 @@ a:focus-visible{
     display: block !important;
     visibility: visible !important;
     color: #ffffff !important;
-    font-size: 2.1rem !important;
+    font-size: clamp(1.45rem, 6vw, 1.85rem) !important;
     line-height: 1.25 !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 8px !important;
   }
   
   .page-hero p {
     display: block !important;
     visibility: visible !important;
     color: rgba(203, 213, 225, 0.9) !important;
-    font-size: 0.95rem !important;
-    line-height: 1.6 !important;
+    font-size: 0.88rem !important;
+    line-height: 1.55 !important;
     margin: 0 auto !important;
     max-width: 100% !important;
   }
@@ -2250,7 +2260,8 @@ a:focus-visible{
     display: flex !important;
     visibility: visible !important;
     justify-content: center !important;
-    margin-bottom: 16px !important;
+    margin-bottom: 8px !important;
+    font-size: 0.75rem !important;
   }
 
   .breadcrumb a, .breadcrumb-sep, .breadcrumb span {
@@ -2261,6 +2272,14 @@ a:focus-visible{
   .section-tag {
     display: inline-block !important;
     visibility: visible !important;
+    font-size: 0.65rem !important;
+    padding: 4px 10px !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Compact Search Section spacing */
+  .page-search-section {
+    padding: 16px 0 !important;
   }
 
   /* Modern Unified Mobile Search Bar Component */
@@ -2270,7 +2289,7 @@ a:focus-visible{
     background: var(--card-bg) !important;
     border: 1px solid var(--card-border) !important;
     border-radius: var(--radius-md) !important;
-    padding: 6px 6px 6px 14px !important;
+    padding: 5px 5px 5px 12px !important;
     gap: 8px !important;
     max-width: 100% !important;
     box-shadow: var(--shadow-sm) !important;
@@ -2280,8 +2299,8 @@ a:focus-visible{
   .page-search-section .search-icon {
     position: static !important;
     transform: none !important;
-    width: 18px !important;
-    height: 18px !important;
+    width: 16px !important;
+    height: 16px !important;
     color: var(--text-muted) !important;
     flex-shrink: 0 !important;
     display: block !important;
@@ -2293,8 +2312,8 @@ a:focus-visible{
     width: auto !important;
     background: transparent !important;
     border: none !important;
-    padding: 8px 0 !important;
-    font-size: 0.9rem !important;
+    padding: 6px 0 !important;
+    font-size: 0.85rem !important;
     color: var(--text-primary) !important;
     outline: none !important;
     box-shadow: none !important;
@@ -2304,142 +2323,147 @@ a:focus-visible{
   .page-search-section .search-btn {
     position: static !important;
     transform: none !important;
-    padding: 10px 18px !important;
-    border-radius: 10px !important;
-    font-size: 0.85rem !important;
+    padding: 8px 14px !important;
+    border-radius: 8px !important;
+    font-size: 0.8rem !important;
     font-weight: 600 !important;
     background: linear-gradient(135deg, var(--blue-500), var(--navy-700)) !important;
     color: #ffffff !important;
     flex-shrink: 0 !important;
   }
 
+  .page-search-section .search-results-panel {
+    margin-top: 10px !important;
+  }
+
   /* Compact content block & topic spacings */
   .learning-section {
-    margin-bottom: 48px !important;
+    margin-bottom: 36px !important;
   }
 
   .section-topic-header {
-    gap: 16px !important;
-    margin-bottom: 28px !important;
-    padding-bottom: 20px !important;
+    gap: 12px !important;
+    margin-bottom: 20px !important;
+    padding-bottom: 16px !important;
     flex-direction: column !important;
     align-items: center !important;
     text-align: center !important;
   }
 
   .topic-number {
-    width: 44px !important;
-    height: 44px !important;
-    font-size: 0.95rem !important;
-    margin-bottom: 8px !important;
-  }
-
-  .topic-meta span {
-    font-size: 0.68rem !important;
-    margin-bottom: 4px !important;
-  }
-
-  .topic-meta h2 {
-    font-size: 1.4rem !important;
-    margin-bottom: 8px !important;
-  }
-
-  .topic-meta p {
-    font-size: 0.9rem !important;
-  }
-
-  .content-block {
-    margin-bottom: 28px !important;
-  }
-
-  .content-block h3 {
-    font-size: 1.15rem !important;
-    margin-bottom: 12px !important;
-  }
-
-  .content-block p {
-    font-size: 0.9rem !important;
-    line-height: 1.7 !important;
-    margin-bottom: 12px !important;
-  }
-
-  .highlight-box {
-    padding: 16px 18px !important;
-    margin: 20px 0 !important;
-  }
-
-  .highlight-box p {
-    font-size: 0.92rem !important;
-  }
-
-  .tip-box {
-    padding: 16px 18px !important;
-    margin: 20px 0 !important;
-  }
-
-  .tip-box-title {
-    font-size: 0.68rem !important;
-    margin-bottom: 8px !important;
-  }
-
-  .tip-box p {
-    font-size: 0.88rem !important;
-  }
-
-  .info-grid {
-    gap: 12px !important;
-    margin: 20px 0 !important;
-  }
-
-  .info-item {
-    padding: 16px !important;
-  }
-
-  .info-item h4 {
-    font-size: 0.9rem !important;
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 0.85rem !important;
     margin-bottom: 6px !important;
   }
 
+  .topic-meta span {
+    font-size: 0.65rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .topic-meta h2 {
+    font-size: clamp(1.2rem, 5vw, 1.4rem) !important;
+    margin-bottom: 6px !important;
+  }
+
+  .topic-meta p {
+    font-size: 0.85rem !important;
+  }
+
+  .content-block {
+    margin-bottom: 20px !important;
+  }
+
+  .content-block h3 {
+    font-size: 1.05rem !important;
+    margin-bottom: 10px !important;
+  }
+
+  .content-block p {
+    font-size: 0.88rem !important;
+    line-height: 1.65 !important;
+    margin-bottom: 10px !important;
+  }
+
+  .highlight-box {
+    padding: 14px 16px !important;
+    margin: 16px 0 !important;
+  }
+
+  .highlight-box p {
+    font-size: 0.88rem !important;
+  }
+
+  .tip-box {
+    padding: 14px 16px !important;
+    margin: 16px 0 !important;
+  }
+
+  .tip-box-title {
+    font-size: 0.65rem !important;
+    margin-bottom: 6px !important;
+  }
+
+  .tip-box p {
+    font-size: 0.84rem !important;
+  }
+
+  .info-grid {
+    gap: 10px !important;
+    margin: 16px 0 !important;
+  }
+
+  .info-item {
+    padding: 14px !important;
+  }
+
+  .info-item h4 {
+    font-size: 0.86rem !important;
+    margin-bottom: 4px !important;
+  }
+
   .info-item p {
-    font-size: 0.82rem !important;
-    line-height: 1.55 !important;
+    font-size: 0.8rem !important;
+    line-height: 1.5 !important;
   }
 
   .check-list {
-    gap: 8px !important;
-    margin: 12px 0 !important;
+    gap: 6px !important;
+    margin: 10px 0 !important;
   }
 
   .check-list li {
-    padding: 8px 12px !important;
-    font-size: 0.88rem !important;
-    gap: 10px !important;
+    padding: 6px 10px !important;
+    font-size: 0.84rem !important;
+    gap: 8px !important;
   }
 
   /* Compress stage cards from learning.css */
   .stage-card {
-    padding: 18px !important;
-    gap: 14px !important;
+    padding: 16px !important;
+    gap: 12px !important;
   }
 
   .stage-badge {
-    width: 38px !important;
-    height: 38px !important;
-    font-size: 0.95rem !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.85rem !important;
+    border-radius: 6px !important;
   }
 
   .stage-content h4 {
-    font-size: 0.92rem !important;
-    margin-bottom: 6px !important;
+    font-size: 0.88rem !important;
+    margin-bottom: 4px !important;
   }
 
   .stage-content p {
-    font-size: 0.84rem !important;
-    line-height: 1.55 !important;
+    font-size: 0.8rem !important;
+    line-height: 1.5 !important;
   }
 
   .example-answer {
-    padding: 14px 18px !important;
-    font-size: 0.82rem !important;
+    padding: 12px 14px !important;
+    font-size: 0.78rem !important;
   }
 }
