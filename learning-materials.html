@@ -872,25 +872,34 @@ const sections = document.querySelectorAll(
     top:auto !important;
     width:100%;
     margin-bottom:24px;
+    overflow:hidden;
   }
 
   .sidebar-card{
-    overflow-x:auto;
-    overflow-y:hidden;
-    -webkit-overflow-scrolling:touch;
+    overflow:visible;
   }
 
   .sidebar-nav{
     display:flex;
     flex-wrap:nowrap;
     gap:12px;
-    min-width:max-content;
+
+    overflow-x:auto;
+    overflow-y:hidden;
+
+    -webkit-overflow-scrolling:touch;
+
     padding-bottom:8px;
+    scrollbar-width:none;
+  }
+
+  .sidebar-nav::-webkit-scrollbar{
+    display:none;
   }
 
   .sidebar-link{
-    white-space:nowrap;
+    flex:0 0 auto;
     min-width:180px;
-    flex-shrink:0;
+    white-space:nowrap;
   }
 }

@@ -5,8 +5,8 @@
 (function () {
   "use strict";
 
-  /* ── Dark Mode ─────────────────────────────────────────────── */
   const THEME_KEY = "ccit-theme";
+  const SIDEBAR_TOP_OFFSET = 92;
 
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
@@ -26,24 +26,18 @@
     applyTheme(current === "dark" ? "light" : "dark");
   }
 
-  /* ── Navbar scroll effect ──────────────────────────────────── */
   function initNavbar() {
     const navbar = document.querySelector(".navbar");
     if (!navbar) return;
 
     const onScroll = () => {
-      if (window.scrollY > 20) {
-        navbar.classList.add("scrolled");
-      } else {
-        navbar.classList.remove("scrolled");
-      }
+      navbar.classList.toggle("scrolled", window.scrollY > 20);
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
   }
 
-  /* ── Active nav link ───────────────────────────────────────── */
   function setActiveNavLink() {
     const current = window.location.pathname.split("/").pop() || "index.html";
     document.querySelectorAll(".nav-link").forEach((link) => {
@@ -58,7 +52,6 @@
     });
   }
 
-  /* ── Mobile nav ─────────────────────────────────────────────── */
   function initMobileNav() {
     const btn = document.querySelector(".mobile-menu-btn");
     const mobileNav = document.querySelector(".mobile-nav");
@@ -89,11 +82,8 @@
       }
     });
 
-    // Auto-close menu when a link inside is clicked (UX Bugfix)
     mobileNav.querySelectorAll(".mobile-nav-link").forEach((link) => {
-      link.addEventListener("click", () => {
-        closeMobileNav();
-      });
+      link.addEventListener("click", closeMobileNav);
     });
 
     document.addEventListener("click", (e) => {
@@ -103,7 +93,6 @@
     });
   }
 
-  /* ── Back to top ────────────────────────────────────────────── */
   function initBackTop() {
     const btn = document.querySelector(".back-top");
     if (!btn) return;
@@ -121,7 +110,6 @@
     });
   }
 
-  /* ── Scroll reveal ──────────────────────────────────────────── */
   function initReveal() {
     const els = document.querySelectorAll(".reveal");
     if (!els.length) return;
@@ -141,102 +129,155 @@
     els.forEach((el) => observer.observe(el));
   }
 
-/* ── Sidebar active link (learning page) ───────────────────── */
-function initSidebarHighlight() {
-  const sections = document.querySelectorAll(".learning-section");
-  const links = document.querySelectorAll(".sidebar-link");
-
-  if (!sections.length || !links.length) return;
-
-  function setActiveLink(id) {
-    const activeTarget = id === "topic-6" ? "topic-5" : id;
-    links.forEach((link) => {
-      link.classList.remove("active");
-
-      if (link.dataset.target === activeTarget) {
-        link.classList.add("active");
-      }
-    });
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
   }
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveLink(entry.target.id);
-          updateProgress();
+  function initSidebarHighlight() {
+    const sections = Array.from(document.querySelectorAll(".learning-section"));
+    const links = Array.from(document.querySelectorAll(".sidebar-link"));
+    const progressFill = document.querySelector(".progress-fill");
+    const progressLabel = document.querySelector(".progress-label");
+    let activeSectionId = null;
+    let ticking = false;
+    const ratios = new Map();
+
+    if (!sections.length || !links.length || !progressFill) return;
+
+    sections.forEach((section) => ratios.set(section.id, 0));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let shouldUpdate = false;
+        entries.forEach((entry) => {
+          ratios.set(entry.target.id, entry.intersectionRatio);
+          if (entry.isIntersecting) {
+            shouldUpdate = true;
+          }
+        });
+
+        if (shouldUpdate) {
+          const bestSection = getBestSectionByRatio();
+          if (bestSection) {
+            setActiveSidebarLink(bestSection.id);
+          }
         }
-      });
-    },
-    {
-      threshold: 0.4,
-      rootMargin: "-100px 0px -50% 0px"
-    }
-  );
 
-  sections.forEach((section) => {
-    observer.observe(section);
-  });
-
-  links.forEach((link) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      const targetId = link.dataset.target;
-      const targetSection = document.getElementById(targetId);
-
-      if (!targetSection) return;
-
-      setActiveLink(targetId);
-
-      targetSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-    });
-  });
-}
-
-  function updateProgress() {
-    const sections = document.querySelectorAll(".learning-section");
-    const fill = document.querySelector(".progress-fill");
-    const label = document.querySelector(".progress-label");
-
-    if (!sections.length || !fill) return;
-
-    let currentIndex = 0;
-
-    sections.forEach((section, index) => {
-      const rect = section.getBoundingClientRect();
-      // If the top of the section has scrolled past the middle of the viewport
-      if (rect.top <= window.innerHeight * 0.5) {
-        currentIndex = index + 1;
+        refreshProgress();
+      },
+      {
+        threshold: [0, 0.1, 0.25, 0.4, 0.6, 0.8, 1],
+        rootMargin: "-35% 0px -50% 0px",
       }
-    });
-
-    // Avoid resetting to 0% if we are at the top of the page before the first section
-    if (currentIndex === 0 && sections.length > 0) {
-      currentIndex = 1;
-    }
-
-    const percentage = Math.round(
-      (currentIndex / sections.length) * 100
     );
 
-    fill.style.width = percentage + "%";
+    sections.forEach((section) => observer.observe(section));
 
-    if (label) {
-      label.textContent = percentage + "% Complete";
+    links.forEach((link) => {
+      const targetId = link.dataset.target;
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const targetSection = document.getElementById(targetId);
+        if (!targetSection) return;
+        targetSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        setActiveSidebarLink(targetId);
+      });
+    });
+
+    function getBestSectionByRatio() {
+      return sections.reduce((best, section) => {
+        const currentRatio = ratios.get(section.id) || 0;
+        const bestRatio = best ? ratios.get(best.id) || 0 : 0;
+        return currentRatio > bestRatio ? section : best;
+      }, sections[0]);
     }
+
+    function getBestSectionByViewport() {
+      const offset = Math.min(SIDEBAR_TOP_OFFSET, window.innerHeight * 0.15);
+      let best = sections[0];
+      let bestScore = Infinity;
+
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const score = Math.abs(rect.top - offset);
+        if (rect.bottom > offset && score < bestScore) {
+          bestScore = score;
+          best = section;
+        }
+      });
+
+      return best;
+    }
+
+    function setActiveSidebarLink(id) {
+      if (activeSectionId === id) return;
+      activeSectionId = id;
+      links.forEach((link) => {
+        if (link.dataset.target === id) {
+          link.classList.add("active");
+        } else {
+          link.classList.remove("active");
+        }
+      });
+    }
+
+    function refreshProgress() {
+      const currentSection = sections.find(
+        (section) => section.id === activeSectionId
+      ) || sections[0];
+      const currentIndex = sections.indexOf(currentSection);
+      if (currentIndex < 0) return;
+
+      const rect = currentSection.getBoundingClientRect();
+      const sectionHeight = Math.max(rect.height, 1);
+      const sectionProgress = clamp(
+        (SIDEBAR_TOP_OFFSET - rect.top) / sectionHeight,
+        0,
+        1
+      );
+      const percentage = Math.round(
+        ((currentIndex + sectionProgress) / sections.length) * 100
+      );
+
+      progressFill.style.width = `${percentage}%`;
+      if (progressLabel) {
+        progressLabel.textContent = `${percentage}% Complete`;
+      }
+    }
+
+    function syncScrollState() {
+      ticking = false;
+      const bestSection = getBestSectionByViewport();
+      if (bestSection) {
+        setActiveSidebarLink(bestSection.id);
+      }
+      refreshProgress();
+    }
+
+    function requestTick() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(syncScrollState);
+    }
+
+    window.addEventListener("scroll", requestTick, { passive: true });
+    window.addEventListener("resize", requestTick, { passive: true });
+    window.addEventListener("load", requestTick);
+    requestTick();
   }
 
-  /* ── Search ─────────────────────────────────────────────────── */
   const SEARCH_DATA = [
     {
       title: "The Importance of Interviewing Skills",
       section: "Topic 1",
       url: "learning-materials.html#topic-1",
-      keywords: ["interviewing", "skills", "communication", "importance", "first impression"],
+      keywords: [
+        "interviewing",
+        "skills",
+        "communication",
+        "importance",
+        "first impression",
+      ],
       snippet:
         "Interviewing skills are essential competencies that determine how effectively you present yourself to potential employers...",
     },
@@ -244,7 +285,13 @@ function initSidebarHighlight() {
       title: "The Importance of Job Interviews",
       section: "Topic 2",
       url: "learning-materials.html#topic-2",
-      keywords: ["job interview", "employer", "hiring", "assessment", "evaluation"],
+      keywords: [
+        "job interview",
+        "employer",
+        "hiring",
+        "assessment",
+        "evaluation",
+      ],
       snippet:
         "Job interviews serve as the critical gateway between being a candidate on paper and becoming a valued team member...",
     },
@@ -269,7 +316,15 @@ function initSidebarHighlight() {
       title: "Stages in an Interview",
       section: "Topic 4",
       url: "learning-materials.html#topic-4",
-      keywords: ["stages", "phases", "opening", "body", "closing", "rapport", "questions"],
+      keywords: [
+        "stages",
+        "phases",
+        "opening",
+        "body",
+        "closing",
+        "rapport",
+        "questions",
+      ],
       snippet:
         "Every interview follows a recognizable structure. Mastering each stage gives you control over your performance...",
     },
@@ -292,7 +347,13 @@ function initSidebarHighlight() {
       title: "Communication Skills in Interviews",
       section: "Topic 1",
       url: "learning-materials.html#topic-1",
-      keywords: ["verbal", "non-verbal", "body language", "active listening", "tone"],
+      keywords: [
+        "verbal",
+        "non-verbal",
+        "body language",
+        "active listening",
+        "tone",
+      ],
       snippet:
         "Effective communication goes beyond what you say — it encompasses how you carry yourself, your tone, and active listening...",
     },
@@ -300,7 +361,15 @@ function initSidebarHighlight() {
       title: "Behavioral Interview Questions (STAR Method)",
       section: "Topic 4",
       url: "learning-materials.html#topic-4",
-      keywords: ["STAR", "situation", "task", "action", "result", "behavioral", "method"],
+      keywords: [
+        "STAR",
+        "situation",
+        "task",
+        "action",
+        "result",
+        "behavioral",
+        "method",
+      ],
       snippet:
         "The STAR method (Situation, Task, Action, Result) is the gold standard for answering behavioral interview questions...",
     },
@@ -327,7 +396,9 @@ function initSidebarHighlight() {
       );
 
       if (!matches.length) {
-        results.innerHTML = `<div class="search-result-item"><p class="result-snippet" style="color:rgba(148,163,184,0.7);">No results found for "<strong>${escapeHtml(query)}</strong>". Try different keywords.</p></div>`;
+        results.innerHTML = `<div class="search-result-item"><p class="result-snippet" style="color:rgba(148,163,184,0.7);">No results found for "<strong>${escapeHtml(
+          query
+        )}</strong>". Try different keywords.</p></div>`;
         return;
       }
 
@@ -370,7 +441,6 @@ function initSidebarHighlight() {
     return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
 
-  /* ── Counter animation ──────────────────────────────────────── */
   function initCounters() {
     const counters = document.querySelectorAll("[data-count]");
     if (!counters.length) return;
@@ -406,7 +476,6 @@ function initSidebarHighlight() {
     counters.forEach((c) => observer.observe(c));
   }
 
-  /* ── Init ───────────────────────────────────────────────────── */
   document.addEventListener("DOMContentLoaded", () => {
     initTheme();
     initNavbar();
@@ -415,18 +484,9 @@ function initSidebarHighlight() {
     initBackTop();
     initReveal();
     initSidebarHighlight();
-
-window.addEventListener(
-  "scroll",
-  updateProgress,
-  { passive: true }
-);
-
-updateProgress();
     initSearch();
     initCounters();
 
-    // Dark toggle buttons
     document.querySelectorAll(".dark-toggle").forEach((btn) => {
       btn.addEventListener("click", toggleTheme);
     });
