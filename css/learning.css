@@ -14,10 +14,12 @@
   backdrop-filter: blur(10px);
 }
 
-.type-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-  border-color: rgba(37, 99, 235, 0.3);
+@media (hover: hover) {
+  .type-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(37, 99, 235, 0.3);
+  }
 }
 
 .type-card-tag {
@@ -121,10 +123,12 @@
   align-items: start;
 }
 
-.stage-card:hover {
-  border-color: rgba(37, 99, 235, 0.3);
-  transform: translateX(4px);
-  box-shadow: var(--shadow-md);
+@media (hover: hover) {
+  .stage-card:hover {
+    border-color: rgba(37, 99, 235, 0.3);
+    transform: translateX(4px);
+    box-shadow: var(--shadow-md);
+  }
 }
 
 .stage-badge {
@@ -226,11 +230,7 @@ html{
   scroll-behavior:smooth;
 }
 
-.progress-stats{
-  margin-top:8px;
-  font-size:.8rem;
-  color:var(--text-muted);
-}
+
 
 .reference-list{
   padding-left:22px;
@@ -258,4 +258,27 @@ html{
     margin-top: 8px;
     font-size: 0.85rem;
     color: var(--text-muted);
+}
+
+/* Theme-Aware Search Results specifically for the learning page */
+.search-result-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+}
+
+.search-result-item:hover {
+  background: rgba(37, 99, 235, 0.08);
+  border-color: var(--blue-400);
+}
+
+[data-theme="dark"] .search-result-item:hover {
+  background: rgba(37, 99, 235, 0.15);
+}
+
+.result-title {
+  color: var(--text-primary);
+}
+
+.result-snippet {
+  color: var(--text-muted);
 }
