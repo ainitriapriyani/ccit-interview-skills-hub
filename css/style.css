@@ -1990,48 +1990,57 @@ a:focus-visible{
 @media (max-width:768px){
 
   .learning-sidebar{
-    position:relative !important;
-    top:auto !important;
-    overflow:visible !important;
+    position: relative !important;
+    top: auto !important;
+    overflow: visible !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .sidebar-card{
-    overflow:visible !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-bottom: 8px;
   }
 
-
   .sidebar-nav{
-    display:flex !important;
-    flex-wrap:nowrap !important;
-
-    overflow-x:auto !important;
-    overflow-y:hidden !important;
-
-    -webkit-overflow-scrolling:touch;
-
-    scrollbar-width:none;
-
-    gap:12px;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 12px;
+    scroll-snap-type: x mandatory;
+    padding: 8px 16px 12px;
+    margin: 0;
   }
 
   .sidebar-nav::-webkit-scrollbar{
-    display:none;
+    display: none;
+    height: 0;
   }
 
   .sidebar-link{
-    flex:0 0 180px !important;
-    white-space:nowrap !important;
+    flex: 0 0 auto !important;
+    min-width: 140px !important;
+    white-space: nowrap !important;
+    scroll-snap-align: start;
   }
-}
-@media (max-width:768px){
+
+  .container {
+    width: 100%;
+    max-width: 100%;
+  }
 
   .learning-layout{
-    grid-template-columns:1fr !important;
-    gap:24px !important;
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
   }
-
-  .sidebar-card{
-    padding-bottom:8px;
-  }
-
 }

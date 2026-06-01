@@ -194,7 +194,7 @@
 
     function getBestSectionByViewport() {
       const offset = Math.min(SIDEBAR_TOP_OFFSET, window.innerHeight * 0.15);
-      let best = sections[0];
+      let best = null;
       let bestScore = Infinity;
 
       sections.forEach((section) => {
@@ -205,6 +205,10 @@
           best = section;
         }
       });
+
+      if (!best) {
+        return sections[sections.length - 1] || sections[0];
+      }
 
       return best;
     }
@@ -218,6 +222,17 @@
         } else {
           link.classList.remove("active");
         }
+      });
+      scrollActiveLinkIntoView();
+    }
+
+    function scrollActiveLinkIntoView() {
+      const activeLink = document.querySelector(".sidebar-link.active");
+      if (!activeLink || window.innerWidth > 768) return;
+      activeLink.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest"
       });
     }
 
