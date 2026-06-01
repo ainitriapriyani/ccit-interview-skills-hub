@@ -1987,3 +1987,51 @@ a:focus-visible{
   }
 }
 
+@media (max-width:768px){
+
+  .learning-sidebar{
+    position:relative !important;
+    top:auto !important;
+    overflow:visible !important;
+  }
+
+  .sidebar-card{
+    overflow:visible !important;
+  }
+
+
+  .sidebar-nav{
+    display:flex !important;
+    flex-wrap:nowrap !important;
+
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+
+    -webkit-overflow-scrolling:touch;
+
+    scrollbar-width:none;
+
+    gap:12px;
+  }
+
+  .sidebar-nav::-webkit-scrollbar{
+    display:none;
+  }
+
+  .sidebar-link{
+    flex:0 0 180px !important;
+    white-space:nowrap !important;
+  }
+}
+@media (max-width:768px){
+
+  .learning-layout{
+    grid-template-columns:1fr !important;
+    gap:24px !important;
+  }
+
+  .sidebar-card{
+    padding-bottom:8px;
+  }
+
+}
