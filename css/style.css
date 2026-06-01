@@ -804,19 +804,27 @@ p { color: var(--text-secondary); font-size: 1.05rem; }
   }
 
   @media (max-width: 576px) {
-    .page-search-section .search-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+  .page-search-section .search-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
 
-    .page-search-section .search-btn {
-      position: relative;
-      width: 100%;
-      right: auto;
-      top: auto;
-      transform: none;
-    }
+  .page-search-section .search-btn {
+    position: relative;
+    width: 100%;
+    right: auto;
+    top: auto;
+    transform: none;
+  }
+
+  .search-btn {
+    width: 100%;
+  }
+
+  .search-icon {
+    top: 31px;
+    transform: translateY(-50%);
   }
 
 

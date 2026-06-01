@@ -1,3 +1,4 @@
+console.log("MAIN JS LOADED");
 /* ============================================================
    CCIT Interview Skills Hub — Main JavaScript
    ============================================================ */
@@ -144,10 +145,11 @@
     let ticking = false;
 
     function setActiveSidebarLink(id) {
-      if (activeSectionId === id) return;
-      activeSectionId = id;
+      const targetId = id === "topic-6" ? "topic-5" : id;
+      if (activeSectionId === targetId) return;
+      activeSectionId = targetId;
       links.forEach((link) => {
-        link.classList.toggle("active", link.dataset.target === id);
+        link.classList.toggle("active", link.dataset.target === targetId);
       });
       scrollActiveLinkIntoView();
     }
@@ -195,10 +197,18 @@
       const activeSection = getActiveSection();
       setActiveSidebarLink(activeSection.id);
 
-      const percentage = Math.round(getProgressRatio() * 100);
+      const sectionIndex = sections.indexOf(activeSection) + 1;
+      const activeModuleIndex = Math.min(sectionIndex, 5);
+      const percentage = activeModuleIndex * 20;
+
       progressFill.style.width = `${percentage}%`;
       if (progressLabel) {
         progressLabel.textContent = `${percentage}% Complete`;
+      }
+
+      const progressStats = document.querySelector(".progress-stats");
+      if (progressStats) {
+        progressStats.textContent = `Module ${activeModuleIndex} of 5`;
       }
     }
 
@@ -379,6 +389,18 @@
     if (btn) btn.addEventListener("click", doSearch);
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") doSearch();
+    });
+
+    // Clear search box on click
+    results.addEventListener("click", (e) => {
+      const item = e.target.closest(".search-result-item");
+      if (!item) return;
+      
+      const href = item.getAttribute("href") || "";
+      if (href.startsWith("#") || href.includes("learning-materials.html")) {
+        input.value = "";
+        results.innerHTML = "";
+      }
     });
   }
 
