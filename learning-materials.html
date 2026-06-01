@@ -852,7 +852,45 @@ const sections = document.querySelectorAll(
   });
 
 });
+
 </script>
 
 </body>
 </html>
+/* ==========================
+   MOBILE COURSE MODULE FIX
+   ========================== */
+
+@media (max-width: 768px){
+
+  .learning-layout{
+    display:block;
+  }
+
+  .learning-sidebar{
+    position:relative !important;
+    top:auto !important;
+    width:100%;
+    margin-bottom:24px;
+  }
+
+  .sidebar-card{
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .sidebar-nav{
+    display:flex;
+    flex-wrap:nowrap;
+    gap:12px;
+    min-width:max-content;
+    padding-bottom:8px;
+  }
+
+  .sidebar-link{
+    white-space:nowrap;
+    min-width:180px;
+    flex-shrink:0;
+  }
+}
