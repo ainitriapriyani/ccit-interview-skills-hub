@@ -64,6 +64,16 @@
     const mobileNav = document.querySelector(".mobile-nav");
     if (!btn || !mobileNav) return;
 
+    const closeMobileNav = () => {
+      mobileNav.classList.remove("open");
+      const spans = btn.querySelectorAll("span");
+      if (spans.length >= 3) {
+        spans[0].style.transform = "";
+        spans[1].style.opacity = "1";
+        spans[2].style.transform = "";
+      }
+    };
+
     btn.addEventListener("click", () => {
       mobileNav.classList.toggle("open");
       const spans = btn.querySelectorAll("span");
@@ -79,9 +89,16 @@
       }
     });
 
+    // Auto-close menu when a link inside is clicked (UX Bugfix)
+    mobileNav.querySelectorAll(".mobile-nav-link").forEach((link) => {
+      link.addEventListener("click", () => {
+        closeMobileNav();
+      });
+    });
+
     document.addEventListener("click", (e) => {
       if (!btn.contains(e.target) && !mobileNav.contains(e.target)) {
-        mobileNav.classList.remove("open");
+        closeMobileNav();
       }
     });
   }
@@ -132,10 +149,11 @@ function initSidebarHighlight() {
   if (!sections.length || !links.length) return;
 
   function setActiveLink(id) {
+    const activeTarget = id === "topic-6" ? "topic-5" : id;
     links.forEach((link) => {
       link.classList.remove("active");
 
-      if (link.dataset.target === id) {
+      if (link.dataset.target === activeTarget) {
         link.classList.add("active");
       }
     });
@@ -180,35 +198,37 @@ function initSidebarHighlight() {
 }
 
   function updateProgress() {
-  const sections = document.querySelectorAll(".learning-section");
-  const fill = document.querySelector(".progress-fill");
-  const label = document.querySelector(".progress-label");
+    const sections = document.querySelectorAll(".learning-section");
+    const fill = document.querySelector(".progress-fill");
+    const label = document.querySelector(".progress-label");
 
-  if (!sections.length || !fill) return;
+    if (!sections.length || !fill) return;
 
-  let currentIndex = 0;
+    let currentIndex = 0;
 
-  sections.forEach((section, index) => {
-    const rect = section.getBoundingClientRect();
+    sections.forEach((section, index) => {
+      const rect = section.getBoundingClientRect();
+      // If the top of the section has scrolled past the middle of the viewport
+      if (rect.top <= window.innerHeight * 0.5) {
+        currentIndex = index + 1;
+      }
+    });
 
-    if (
-      rect.top <= window.innerHeight * 0.35 &&
-      rect.bottom >= window.innerHeight * 0.35
-    ) {
-      currentIndex = index + 1;
+    // Avoid resetting to 0% if we are at the top of the page before the first section
+    if (currentIndex === 0 && sections.length > 0) {
+      currentIndex = 1;
     }
-  });
 
-  const percentage = Math.round(
-    (currentIndex / sections.length) * 100
-  );
+    const percentage = Math.round(
+      (currentIndex / sections.length) * 100
+    );
 
-  fill.style.width = percentage + "%";
+    fill.style.width = percentage + "%";
 
-  if (label) {
-    label.textContent = percentage + "% Complete";
+    if (label) {
+      label.textContent = percentage + "% Complete";
+    }
   }
-}
 
   /* ── Search ─────────────────────────────────────────────────── */
   const SEARCH_DATA = [

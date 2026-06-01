@@ -622,13 +622,13 @@ p { color: var(--text-secondary); font-size: 1.05rem; }
 
 .hero-card-float.card-1 {
   top: 8%;
-  left: -5%;
+  left: 2%;
   animation: float 5s ease-in-out infinite;
 }
 
 .hero-card-float.card-2 {
   bottom: 12%;
-  right: -8%;
+  right: 2%;
   animation: float 7s ease-in-out infinite reverse;
 }
 
@@ -1476,6 +1476,8 @@ a:focus-visible{
   text-align: center;
   position: relative;
   overflow: hidden;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .team-card::after {
@@ -1824,6 +1826,8 @@ a:focus-visible{
 
   .mobile-nav {
     top: 64px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
   }
 
   .mobile-nav-link {
