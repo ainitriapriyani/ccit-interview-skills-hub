@@ -126,6 +126,7 @@
               <span class="sidebar-num">01</span>
               Interviewing Skills
             </a>
+            
             <a class="sidebar-link" data-target="topic-2">
               <span class="sidebar-num">02</span>
               Job Interviews
@@ -801,41 +802,44 @@ CCIT Interview Skills Hub is an educational website designed to help students im
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  const sections = document.querySelectorAll(".learning-section");
-  const fill = document.querySelector(".progress-fill");
+const sections = document.querySelectorAll(
+  '.learning-section:not(#topic-6)'
+);  const fill = document.querySelector(".progress-fill");
   const label = document.querySelector(".progress-label");
   const sidebarLinks = document.querySelectorAll(".sidebar-link");
 
   function updateProgress() {
 
-    let currentIndex = 0;
+  let currentIndex = 0;
 
-    sections.forEach((section, index) => {
-      const rect = section.getBoundingClientRect();
+  sections.forEach((section, index) => {
 
-      if (rect.top <= window.innerHeight * 0.35) {
-        currentIndex = index;
-      }
-    });
+    const rect = section.getBoundingClientRect();
 
-    const percent = Math.round(
-      ((currentIndex + 1) / sections.length) * 100
-    );
-
-    fill.style.width = percent + "%";
-
-    if (label) {
-      label.textContent = percent + "% Complete";
+    if (rect.top <= 150) {
+      currentIndex = index;
     }
 
-    sidebarLinks.forEach(link => {
-      link.classList.remove("active");
-    });
+  });
 
-    if (sidebarLinks[currentIndex]) {
-      sidebarLinks[currentIndex].classList.add("active");
-    }
+  const percent = Math.round(
+    ((currentIndex + 1) / sections.length) * 100
+  );
+
+  fill.style.width = percent + "%";
+
+  if (label) {
+    label.textContent = percent + "% Complete";
   }
+
+  sidebarLinks.forEach(link => {
+    link.classList.remove("active");
+  });
+
+  if (sidebarLinks[currentIndex]) {
+    sidebarLinks[currentIndex].classList.add("active");
+  }
+}
 
   updateProgress();
 
