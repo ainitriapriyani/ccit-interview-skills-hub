@@ -942,7 +942,7 @@ p { color: var(--text-secondary); font-size: 1.05rem; }
   align-items: start;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 24px;
@@ -1801,14 +1801,14 @@ a:focus-visible{
 
 /* ─── Scroll Animations ──────────────────────────────────────── */
 .reveal {
-  opacity: 0;
-  transform: translateY(24px);
+  opacity: 1;
+  transform: none;
   transition: opacity 0.65s ease, transform 0.65s ease;
 }
 
 .reveal.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 
 .reveal-delay-1 { transition-delay: 0.1s; }
@@ -2060,39 +2060,9 @@ a:focus-visible{
   }
 
   .sidebar-card{
-    overflow-x: hidden !important;
-    overflow-y: visible !important;
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    padding-bottom: 8px;
-  }
-
-  .sidebar-nav{
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    width: 100%;
-    min-width: 0;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    gap: 12px;
-    scroll-snap-type: x mandatory;
-    padding: 8px 16px 12px;
-    margin: 0;
-  }
-
-  .sidebar-nav::-webkit-scrollbar{
-    display: none;
-    height: 0;
-  }
-
-  .sidebar-link{
-    flex: 0 0 auto !important;
-    min-width: 140px !important;
-    white-space: nowrap !important;
-    scroll-snap-align: start;
   }
 
   .container {

@@ -113,8 +113,10 @@
           <div class="progress-bar">
             <div class="progress-fill"></div>
           </div>
-          <div class="progress-label">
-  20% Complete
+          <div class="progress-label">20% Complete</div>
+
+<div class="progress-stats">
+  1 of 5 Modules
 </div>
 
 
@@ -795,6 +797,52 @@ CCIT Interview Skills Hub is an educational website designed to help students im
 </button>
 
 <script src="js/main.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const sections = document.querySelectorAll(
+    '.learning-section:not(#topic-6)'
+  );
+
+  const fill = document.querySelector(".progress-fill");
+  const label = document.querySelector(".progress-label");
+  const sidebarLinks = document.querySelectorAll(".sidebar-link");
+
+  function updateProgress() {
+
+    let currentIndex = 0;
+
+    sections.forEach((section, index) => {
+      const rect = section.getBoundingClientRect();
+
+      if (rect.top <= 150) {
+        currentIndex = index;
+      }
+    });
+
+    const percent = Math.round(
+      ((currentIndex + 1) / sections.length) * 100
+    );
+
+    fill.style.width = percent + "%";
+    label.textContent = percent + "% Complete";
+
+    sidebarLinks.forEach(link => {
+      link.classList.remove("active");
+    });
+
+    if (sidebarLinks[currentIndex]) {
+      sidebarLinks[currentIndex].classList.add("active");
+    }
+  }
+
+  updateProgress();
+
+  window.addEventListener("scroll", updateProgress);
+
+});
+</script>
 
 </body>
 </html>
