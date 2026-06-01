@@ -135,7 +135,7 @@ console.log("MAIN JS LOADED");
   }
 
   function initSidebarHighlight() {
-    const sections = Array.from(document.querySelectorAll(".learning-section"));
+    const sections = Array.from(document.querySelectorAll(".learning-section:not(#topic-6)"));
     const links = Array.from(document.querySelectorAll(".sidebar-link"));
     const progressFill = document.querySelector(".progress-fill");
     const progressLabel = document.querySelector(".progress-label");
@@ -150,18 +150,6 @@ console.log("MAIN JS LOADED");
       activeSectionId = targetId;
       links.forEach((link) => {
         link.classList.toggle("active", link.dataset.target === targetId);
-      });
-      scrollActiveLinkIntoView();
-    }
-
-    function scrollActiveLinkIntoView() {
-      if (window.innerWidth > 768) return;
-      const activeLink = document.querySelector(".sidebar-link.active");
-      if (!activeLink) return;
-      activeLink.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest",
       });
     }
 
