@@ -762,14 +762,63 @@ p { color: var(--text-secondary); font-size: 1.05rem; }
   gap: 12px;
 }
 
-@media (max-width: 576px) {
-  .search-box {
-    flex-direction: column;
+.page-search-section {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--card-border);
+  padding: 24px 0;
+}
+
+.page-search-section .search-panel {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.page-search-section .search-input {
+  width: 100%;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--card-border);
+}
+
+.page-search-section .search-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 10px 16px;
+  border-radius: 12px;
+}
+
+.page-search-section .search-results-panel {
+  margin-top: 12px;
+  width: 100%;
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+  .page-search-section .search-panel {
+    padding: 0 16px;
   }
 
-  .search-input {
-    width: 100%;
+  @media (max-width: 576px) {
+    .page-search-section .search-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .page-search-section .search-btn {
+      position: relative;
+      width: 100%;
+      right: auto;
+      top: auto;
+      transform: none;
+    }
   }
+
 
   .search-btn {
     width: 100%;
@@ -993,7 +1042,7 @@ p { color: var(--text-secondary); font-size: 1.05rem; }
 }
 
 .progress-bar {
-  margin: 16px 24px 20px;
+  margin: 16px 24px 8px;
   background: rgba(37, 99, 235, 0.1);
   border-radius: var(--radius-full);
   height: 4px;
@@ -1009,10 +1058,14 @@ p { color: var(--text-secondary); font-size: 1.05rem; }
 }
 
 .progress-label {
-  padding: 0 24px;
-  font-size: 0.78rem;
+  padding: 0 24px 8px;
+  font-size: 0.82rem;
   color: var(--text-muted);
-  margin-bottom: 16px;
+  margin-bottom: 6px;
+}
+
+.progress-stats {
+  padding: 0 24px 16px;
 }
 
 /* Learning Sections */

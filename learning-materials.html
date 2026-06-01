@@ -88,15 +88,14 @@
 </section>
 
 <!-- ── Search ────────────────────────────────────────────────── -->
-<div style="background:var(--bg-secondary);border-bottom:1px solid var(--card-border);padding:24px 0;">
+<div class="page-search-section">
   <div class="container">
-    <div style="position:relative;max-width:600px;">
+    <div class="search-panel">
       <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input id="search-input" type="text" class="search-input" placeholder="Search topics, terms, interview types..." autocomplete="off"
-        style="width:100%;background:var(--card-bg);color:var(--text-primary);border-color:var(--card-border);" />
-      <button id="search-btn" class="search-btn" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);padding:8px 16px;border-radius:8px;">Search</button>
+      <input id="search-input" type="text" class="search-input" placeholder="Search topics, terms, interview types..." autocomplete="off" />
+      <button id="search-btn" class="search-btn">Search</button>
     </div>
-    <div id="search-results" style="margin-top:12px;max-width:600px;"></div>
+    <div id="search-results" class="search-results-panel"></div>
   </div>
 </div>
 
@@ -857,49 +856,3 @@ const sections = document.querySelectorAll(
 
 </body>
 </html>
-/* ==========================
-   MOBILE COURSE MODULE FIX
-   ========================== */
-
-@media (max-width: 768px){
-
-  .learning-layout{
-    display:block;
-  }
-
-  .learning-sidebar{
-    position:relative !important;
-    top:auto !important;
-    width:100%;
-    margin-bottom:24px;
-    overflow:hidden;
-  }
-
-  .sidebar-card{
-    overflow:visible;
-  }
-
-  .sidebar-nav{
-    display:flex;
-    flex-wrap:nowrap;
-    gap:12px;
-
-    overflow-x:auto;
-    overflow-y:hidden;
-
-    -webkit-overflow-scrolling:touch;
-
-    padding-bottom:8px;
-    scrollbar-width:none;
-  }
-
-  .sidebar-nav::-webkit-scrollbar{
-    display:none;
-  }
-
-  .sidebar-link{
-    flex:0 0 auto;
-    min-width:180px;
-    white-space:nowrap;
-  }
-}

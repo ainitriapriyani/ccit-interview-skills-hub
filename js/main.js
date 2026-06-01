@@ -138,40 +138,78 @@
     const links = Array.from(document.querySelectorAll(".sidebar-link"));
     const progressFill = document.querySelector(".progress-fill");
     const progressLabel = document.querySelector(".progress-label");
-    let activeSectionId = null;
-    let ticking = false;
-    const ratios = new Map();
-
     if (!sections.length || !links.length || !progressFill) return;
 
-    sections.forEach((section) => ratios.set(section.id, 0));
+    let activeSectionId = sections[0].id;
+    let ticking = false;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        let shouldUpdate = false;
-        entries.forEach((entry) => {
-          ratios.set(entry.target.id, entry.intersectionRatio);
-          if (entry.isIntersecting) {
-            shouldUpdate = true;
-          }
-        });
+    function setActiveSidebarLink(id) {
+      if (activeSectionId === id) return;
+      activeSectionId = id;
+      links.forEach((link) => {
+        link.classList.toggle("active", link.dataset.target === id);
+      });
+      scrollActiveLinkIntoView();
+    }
 
-        if (shouldUpdate) {
-          const bestSection = getBestSectionByRatio();
-          if (bestSection) {
-            setActiveSidebarLink(bestSection.id);
-          }
+    function scrollActiveLinkIntoView() {
+      if (window.innerWidth > 768) return;
+      const activeLink = document.querySelector(".sidebar-link.active");
+      if (!activeLink) return;
+      activeLink.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+    }
+
+    function getActiveSection() {
+      const boundary = Math.min(window.innerHeight * 0.15, 96);
+      let bestSection = sections[0];
+      let bestScore = Infinity;
+
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const score = Math.abs(rect.top - boundary);
+        if (score < bestScore) {
+          bestScore = score;
+          bestSection = section;
         }
+      });
 
-        refreshProgress();
-      },
-      {
-        threshold: [0, 0.1, 0.25, 0.4, 0.6, 0.8, 1],
-        rootMargin: "-35% 0px -50% 0px",
+      return bestSection;
+    }
+
+    function getProgressRatio() {
+      const firstSection = sections[0];
+      const lastSection = sections[sections.length - 1];
+      const start = firstSection.offsetTop;
+      const end = lastSection.offsetTop + lastSection.offsetHeight;
+      const boundary = Math.min(window.innerHeight * 0.15, 96);
+      const scrollPosition = window.scrollY + boundary;
+      const ratio = (scrollPosition - start) / Math.max(end - start, 1);
+      return Math.min(Math.max(ratio, 0), 1);
+    }
+
+    function updateSidebarState() {
+      const activeSection = getActiveSection();
+      setActiveSidebarLink(activeSection.id);
+
+      const percentage = Math.round(getProgressRatio() * 100);
+      progressFill.style.width = `${percentage}%`;
+      if (progressLabel) {
+        progressLabel.textContent = `${percentage}% Complete`;
       }
-    );
+    }
 
-    sections.forEach((section) => observer.observe(section));
+    function handleScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        updateSidebarState();
+      });
+    }
 
     links.forEach((link) => {
       const targetId = link.dataset.target;
@@ -184,101 +222,9 @@
       });
     });
 
-    function getBestSectionByRatio() {
-      return sections.reduce((best, section) => {
-        const currentRatio = ratios.get(section.id) || 0;
-        const bestRatio = best ? ratios.get(best.id) || 0 : 0;
-        return currentRatio > bestRatio ? section : best;
-      }, sections[0]);
-    }
-
-    function getBestSectionByViewport() {
-      const offset = Math.min(SIDEBAR_TOP_OFFSET, window.innerHeight * 0.15);
-      let best = null;
-      let bestScore = Infinity;
-
-      sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        const score = Math.abs(rect.top - offset);
-        if (rect.bottom > offset && score < bestScore) {
-          bestScore = score;
-          best = section;
-        }
-      });
-
-      if (!best) {
-        return sections[sections.length - 1] || sections[0];
-      }
-
-      return best;
-    }
-
-    function setActiveSidebarLink(id) {
-      if (activeSectionId === id) return;
-      activeSectionId = id;
-      links.forEach((link) => {
-        if (link.dataset.target === id) {
-          link.classList.add("active");
-        } else {
-          link.classList.remove("active");
-        }
-      });
-      scrollActiveLinkIntoView();
-    }
-
-    function scrollActiveLinkIntoView() {
-      const activeLink = document.querySelector(".sidebar-link.active");
-      if (!activeLink || window.innerWidth > 768) return;
-      activeLink.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest"
-      });
-    }
-
-    function refreshProgress() {
-      const currentSection = sections.find(
-        (section) => section.id === activeSectionId
-      ) || sections[0];
-      const currentIndex = sections.indexOf(currentSection);
-      if (currentIndex < 0) return;
-
-      const rect = currentSection.getBoundingClientRect();
-      const sectionHeight = Math.max(rect.height, 1);
-      const sectionProgress = clamp(
-        (SIDEBAR_TOP_OFFSET - rect.top) / sectionHeight,
-        0,
-        1
-      );
-      const percentage = Math.round(
-        ((currentIndex + sectionProgress) / sections.length) * 100
-      );
-
-      progressFill.style.width = `${percentage}%`;
-      if (progressLabel) {
-        progressLabel.textContent = `${percentage}% Complete`;
-      }
-    }
-
-    function syncScrollState() {
-      ticking = false;
-      const bestSection = getBestSectionByViewport();
-      if (bestSection) {
-        setActiveSidebarLink(bestSection.id);
-      }
-      refreshProgress();
-    }
-
-    function requestTick() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(syncScrollState);
-    }
-
-    window.addEventListener("scroll", requestTick, { passive: true });
-    window.addEventListener("resize", requestTick, { passive: true });
-    window.addEventListener("load", requestTick);
-    requestTick();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
+    handleScroll();
   }
 
   const SEARCH_DATA = [
