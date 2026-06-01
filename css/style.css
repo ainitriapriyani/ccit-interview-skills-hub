@@ -1706,3 +1706,142 @@ p { color: var(--text-secondary); font-size: 1.05rem; }
   .hero-actions { flex-direction: column; }
   .btn-lg { width: 100%; }
 }
+
+/* ==========================================================
+   MOBILE FIXES
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+  /* Navbar */
+  .navbar {
+    height: auto;
+  }
+
+  .nav-inner {
+    height: 64px;
+    padding: 0 12px;
+  }
+
+  /* Logo */
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .logo-title {
+    font-size: 0.85rem;
+  }
+
+  .logo-sub {
+    display: none;
+  }
+
+  /* Tombol hamburger */
+  .mobile-menu-btn {
+    display: flex !important;
+    flex-shrink: 0;
+  }
+
+  /* Sembunyikan menu desktop */
+  .nav-menu,
+  .nav-actions {
+    display: none !important;
+  }
+
+  /* Hero */
+  .hero {
+    padding-top: 90px;
+    min-height: auto;
+  }
+
+  .hero-content {
+    gap: 32px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+  }
+
+  .hero-stats {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  /* Why it matters section */
+  .why-grid,
+  .mission-block,
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Card statistik */
+  .stat-card {
+    width: 100%;
+    min-height: auto;
+  }
+
+  /* Semua card */
+  .card,
+  .feature-card,
+  .team-card {
+    padding: 20px;
+  }
+
+  /* Section */
+  .section {
+    padding: 48px 0;
+  }
+
+  /* Heading */
+  h1 {
+    font-size: 2rem !important;
+  }
+
+  h2 {
+    font-size: 1.6rem !important;
+  }
+
+  p {
+    font-size: 0.95rem;
+  }
+
+  /* Tombol */
+  .btn,
+  .btn-lg {
+    width: 100%;
+  }
+}
+
+
+/* HP kecil */
+@media (max-width: 480px) {
+
+  .container {
+    padding: 0 14px;
+  }
+
+  .logo-title {
+    font-size: 0.75rem;
+  }
+
+  .hero-title {
+    font-size: 1.75rem !important;
+  }
+
+  .hero-desc {
+    font-size: 0.95rem;
+  }
+
+  .back-top {
+    width: 42px;
+    height: 42px;
+    right: 16px;
+    bottom: 16px;
+  }
+}
